@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>{% block title %}Orų informacija{% endblock %}</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+        {% block stylesheets %}
+            {% stylesheets
+                'css/main.css'
+                filter='cssrewrite' output='css/compiled/app.css' %}
+                <link rel="stylesheet" href="{{ asset_url }}" />
+            {% endstylesheets %}
+        {% endblock %}
+        <link rel="icon" type="image/x-icon" href="http://rol.freecluster.eu/orai/images/ficon.png" />
+    </head>
+    <body>
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12">
+                    <a href="/"><img src="http://rol.freecluster.eu/orai/images/oras.png"></a>
+                    <h1>INFORMACIJA APIE ORUS</h1>
+                    <hr>
+                    {% for flash_message in app.session.flashbag.get('notice') %}
+                        <div class="alert alert-success" role="alert">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            {{ flash_message }}
+                        </div>
+                    {% endfor %}
+                    {% for flash_message in app.session.flashbag.get('error') %}
+                        <div class="alert alert-danger" role="alert">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            {{ flash_message }}
+                        </div>
+                    {% endfor %}
+                    {{ form_start(form) }}
+                    {{ form_widget(form) }}
+                    {{ form_end(form) }}
+                    <div class="row">
+                        <div class="col-xs-12 orai" id="orai">
+                            <ul class="nav nav-tabs">
+                                <li class="active" id="main"><a data-toggle="tab" href="#tab-info">Informacija</a></li>
+                                {% for tab in tabs %}
+                                    <li id="main"><a data-toggle="tab" href="#tab-{{ tab.miestas }}"><i class="far fa-compass"></i> {{ tab.miestas }}</a></li>
+                                {% endfor %}
+                            </ul>
+                            <div class="tab-content">
+                                <div id="tab-info" class="tab-pane fade in active">
+                                    <h3>Sveiki!</h3>
+                                    <p>Norėdami pridėti naują orų skirtuką įveskite API raktą, miesto pavadinimą ir spauskitę žalią mygtuką.</p>
+                                    <form action="" method="POST">
+                                        <a href="/clearall" class="btn btn-default"><i class="fas fa-trash-alt" style="color: #ff332f;"></i> Pašalinti visus skirtukus</a>
+                                    </form>
+                                </div>
+                                {% for tab in tabs %}
+                                    <div id="tab-{{ tab.miestas }}" class="tab-pane fade">
+                                        <h3><img src="http://openweathermap.org/img/w/{{ tab.icon }}.png"> {{ tab.miestas }} ({{ tab.temperatura }} °C)</h3>
+                                        <p><b>Šalis:</b> <img src="http://openweathermap.org/images/flags/{{ tab.salis }}.png"></p>
+                                        <p><b>Debesuotumas:</b> {{ tab.debesuotumas }} %</p>
+                                        <p><b>Drėgnumas:</b> {{ tab.dregnumas }} %</p>
+                                        <p><b>Slėgis:</b> {{ tab.slegis }} hPa</p>
+                                        <p><b>Vėjas:</b> {{ tab.vejas }} m/s</p>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% block javascripts %}
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+            <script defer src="https://use.fontawesome.com/releases/v5.0.8/js/solid.js" integrity="sha384-+Ga2s7YBbhOD6nie0DzrZpJes+b2K1xkpKxTFFcx59QmVPaSA8c7pycsNaFwUK6l" crossorigin="anonymous"></script>
+            <script defer src="https://use.fontawesome.com/releases/v5.0.8/js/fontawesome.js" integrity="sha384-7ox8Q2yzO/uWircfojVuCQOZl+ZZBg2D2J5nkpLqzH1HY0C1dHlTKIbpRz/LG23c" crossorigin="anonymous"></script>
+            <script defer src="https://use.fontawesome.com/releases/v5.0.8/js/all.js" integrity="sha384-SlE991lGASHoBfWbelyBPLsUlwY1GwNDJo3jSJO04KZ33K2bwfV9YBauFfnzvynJ" crossorigin="anonymous"></script>
+        {% endblock %}
+    </body>
+</html>
